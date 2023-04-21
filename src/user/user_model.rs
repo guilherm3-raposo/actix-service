@@ -1,14 +1,15 @@
-use serde_derive::{Deserialize, Serialize};
-use sqlx::{Decode, FromRow, MySql, Type};
+use std::str::FromStr;
 
-#[derive(Serialize, Deserialize, FromRow)]
+use serde_derive::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize)]
 pub struct User {
     pub id: i32,
     pub email: Option<String>,
     pub username: Option<String>,
     pub uuid: Option<String>,
-    #[sqlx(flatten)]
     pub person: Person,
+    pub roles: Vec<Role>,
 }
 
 impl User {
@@ -19,6 +20,7 @@ impl User {
             username: None,
             uuid: None,
             person: Person::empty(),
+            roles: Vec::new(),
         }
     }
 
@@ -29,6 +31,7 @@ impl User {
             username: None,
             uuid: None,
             person: Person::empty(),
+            roles: Vec::new(),
         }
     }
 
@@ -39,6 +42,7 @@ impl User {
             username: nu.username,
             uuid: None,
             person: Person::empty(),
+            roles: Vec::new(),
         }
     }
 }
@@ -50,7 +54,7 @@ pub struct NewUser {
     pub username: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Type, FromRow)]
+#[derive(Serialize, Deserialize)]
 pub struct Person {
     pub firstname: Option<String>,
     pub lastname: Option<String>,
@@ -67,19 +71,29 @@ impl Person {
     }
 }
 
-impl<'r> Decode<'r, MySql> for Person
-where
-    &'r str: Decode<'r, MySql>,
-{
-    fn decode(
-        value: <MySql as sqlx::database::HasValueRef<'r>>::ValueRef,
-    ) -> Result<Self, sqlx::error::BoxDynError> {
-        // value.
-        Ok(Person {
-            firstname: None,
-            lastname: None,
-            avatar: None,
-        })
+#[derive(Serialize, Deserialize)]
+pub enum Role {
+    SYSTEM,
+    ADMIN,
+    MODERATOR,
+    MANAGER,
+    STAKEHOLDER,
+    USER,
+}
+
+impl FromStr for Role {
+    type Err = ();
+
+    fn from_str(input: &str) -> Result<Role, Self::Err> {
+        match input {
+            "SYSTEM" => Ok(Role::SYSTEM),
+            "ADMIN" => Ok(Role::ADMIN),
+            "MODERATOR" => Ok(Role::MODERATOR),
+            "MANAGER" => Ok(Role::MANAGER),
+            "STAKEHOLDER" => Ok(Role::STAKEHOLDER),
+            "USER" => Ok(Role::USER),
+            _ => Err(()),
+        }
     }
 }
 
@@ -96,6 +110,13 @@ macro_rules! build_user {
                 lastname: $a.lastname,
                 avatar: $a.avatar,
             },
+            roles: $a
+                .roles
+                .unwrap_or("".to_string())
+                .split(",")
+                .into_iter()
+                .map(|x| Role::from_str(x).unwrap_or(Role::USER))
+                .collect(),
         }
     };
 }

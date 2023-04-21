@@ -1,7 +1,8 @@
-use crate::{db::get_connection, build_user};
+use crate::{build_user, db::get_connection};
 use sqlx::Error;
+use std::str::FromStr;
 
-use super::user_model::{Person, User};
+use super::user_model::{Person, Role, User};
 
 pub async fn get_by_id(id: i32) -> Result<User, Error> {
     let res = sqlx::query_file!("src/user/queries/select_by_id.sql", id)
@@ -29,7 +30,7 @@ pub async fn get_all() -> Result<Vec<User>, Error> {
             }
 
             Ok(users)
-        },
+        }
 
         Err(err) => Err(err),
     }
@@ -55,6 +56,7 @@ pub async fn insert_one(user: User) -> Result<User, Error> {
                     email: user.email,
                     uuid: user.uuid,
                     person: Person::empty(),
+                    roles: Vec::new(),
                 }),
                 Err(err) => Err(err),
             }
