@@ -1,6 +1,6 @@
 UPDATE `user` SET
-    username = ?,
-    email = ?,
-    uuid = ?
+    `username` = ?,
+    `email` = ?,
+    `uuid` = ?
 WHERE
-    id = ?;
+    id = ?

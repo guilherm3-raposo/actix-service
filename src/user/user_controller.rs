@@ -1,7 +1,7 @@
 use actix_web::{delete, error, get, post, put, web, HttpResponse, Responder, Result, Scope};
 
-use crate::user::user_model::{User, NewUser};
 use super::user_service as s;
+use crate::user::user_model::{NewUser, User};
 
 #[get("/all")]
 async fn get_all() -> Result<impl Responder> {
@@ -9,7 +9,7 @@ async fn get_all() -> Result<impl Responder> {
 
     match res {
         Ok(u) => Ok(web::Json(u)),
-        Err(err) => Err(error::ErrorNotFound(err))
+        Err(err) => Err(error::ErrorNotFound(err)),
     }
 }
 
@@ -19,7 +19,7 @@ async fn get_by_id(path_params: web::Path<i32>) -> Result<impl Responder> {
 
     match res {
         Ok(u) => Ok(web::Json(u)),
-        Err(err) => Err(error::ErrorNotFound(err))
+        Err(err) => Err(error::ErrorNotFound(err)),
     }
 }
 
@@ -31,7 +31,7 @@ async fn insert(new_user: web::Json<NewUser>) -> Result<impl Responder> {
 
     match res {
         Ok(u) => Ok(web::Json(u)),
-        Err(err) => Err(error::ErrorBadRequest(err))
+        Err(err) => Err(error::ErrorBadRequest(err)),
     }
 }
 
@@ -41,7 +41,7 @@ async fn put(user: web::Json<User>) -> Result<impl Responder> {
 
     match res {
         Ok(_) => Ok(web::Json(true)),
-        Err(err) => Err(error::ErrorBadRequest(err))
+        Err(err) => Err(error::ErrorBadRequest(err)),
     }
 
 }
