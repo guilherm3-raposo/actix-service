@@ -1,4 +1,6 @@
-UPDATE `user` SET
+UPDATE
+    `user`
+SET
     `username` = ?,
     `email` = ?,
     `uuid` = ?

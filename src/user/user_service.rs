@@ -1,7 +1,7 @@
 use sqlx::Error;
 
-use crate::user::user_persistence as p;
 use super::user_model::User;
+use crate::user::user_persistence as p;
 
 pub async fn get_by_id(id: i32) -> Result<User, Error> {
     p::get_by_id(id).await

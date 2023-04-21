@@ -43,7 +43,6 @@ async fn put(user: web::Json<User>) -> Result<impl Responder> {
         Ok(_) => Ok(web::Json(true)),
         Err(err) => Err(error::ErrorBadRequest(err)),
     }
-
 }
 
 #[delete("/{id}")]

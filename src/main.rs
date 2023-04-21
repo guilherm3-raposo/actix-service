@@ -2,8 +2,8 @@ mod db;
 mod user;
 use actix_web::{get, App, HttpResponse, HttpServer, Responder};
 
-use dotenv::dotenv;
 use crate::db::{create, run_migrations};
+use dotenv::dotenv;
 
 #[get("/")]
 async fn hello() -> impl Responder {
