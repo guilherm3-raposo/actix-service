@@ -1,4 +1,5 @@
 mod db;
+mod user;
 use actix_web::{get, App, HttpResponse, HttpServer, Responder};
 
 use dotenv::dotenv;
@@ -18,6 +19,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
+            .service(user::user_controller::scope())
             .service(hello)
     })
     .bind(("127.0.0.1", 8080))?
