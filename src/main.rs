@@ -1,8 +1,8 @@
 mod db;
 mod user;
-use actix_web::{get, App, HttpResponse, HttpServer, Responder};
 
 use crate::db::{create, run_migrations};
+use actix_web::{get, App, HttpResponse, HttpServer, Responder};
 use dotenv::dotenv;
 
 #[get("/")]

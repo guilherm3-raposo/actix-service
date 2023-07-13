@@ -1,4 +1,4 @@
 INSERT INTO
-    `user` (username, email, uuid)
+    `user` (`username`, `email`, `uuid`)
 VALUES
-    (?, ?, ?)
+    (?, ?, ?);
