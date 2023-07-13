@@ -94,12 +94,12 @@ pub async fn delete_by_id(id: i32) -> Result<u64, Error> {
 }
 
 pub async fn update_user_roles(user: UserRoleUpdate) -> Result<(), Error> {
-    let conn = get_connection().await?;
+    let mut transaction = get_connection().await?.begin().await?;
 
     let id = user.id;
 
     let _ = sqlx::query!("DELETE FROM `role` WHERE user_id = ?", id)
-        .execute(&conn)
+        .execute(&mut transaction)
         .await?;
 
     let mut roles = user.roles;
@@ -110,8 +110,8 @@ pub async fn update_user_roles(user: UserRoleUpdate) -> Result<(), Error> {
             b.push_bind(id).push_bind(role.to_string());
         })
         .build()
-        .execute(&conn)
+        .execute(&mut transaction)
         .await?;
 
-    Ok(())
+    transaction.commit().await
 }
