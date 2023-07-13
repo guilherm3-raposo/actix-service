@@ -15,7 +15,9 @@ async fn get_all() -> Result<impl Responder> {
 
     match res {
         Ok(u) => Ok(web::Json(u)),
-        Err(err) => Err(error::ErrorNotFound(err)),
+        Err(_) => Err(error::ErrorNotFound(web::Json(
+            r#" { "message": "NO_USERS_FOUND" }"#,
+        ))),
     }
 }
 
@@ -25,7 +27,9 @@ async fn get_by_id(path_params: web::Path<i32>) -> Result<impl Responder> {
 
     match res {
         Ok(u) => Ok(web::Json(u)),
-        Err(err) => Err(error::ErrorNotFound(err)),
+        Err(_) => Err(error::ErrorNotFound(web::Json(
+            r#"{"message":"USER_NOT_FOUND"}"#,
+        ))),
     }
 }
 
@@ -35,7 +39,9 @@ async fn insert(new_user: web::Json<NewUser>) -> Result<impl Responder> {
 
     match res {
         Ok(u) => Ok(web::Json(u)),
-        Err(err) => Err(error::ErrorBadRequest(err)),
+        Err(_) => Err(error::ErrorBadRequest(web::Json(
+            r#"{"message":"ERROR_INSERTING_USER"}"#,
+        ))),
     }
 }
 
@@ -45,7 +51,9 @@ async fn put(user: web::Json<User>) -> Result<impl Responder> {
 
     match res {
         Ok(_) => Ok(web::Json(true)),
-        Err(err) => Err(error::ErrorBadRequest(err)),
+        Err(_) => Err(error::ErrorBadRequest(web::Json(
+            r#"{"message":"ERROR_UPDATING_USER"}"#,
+        ))),
     }
 }
 
@@ -79,7 +87,9 @@ async fn put_roles(user: web::Json<UserRoleUpdate>) -> Result<impl Responder> {
 
     match res {
         Ok(_) => Ok(web::Json(true)),
-        Err(err) => Err(error::ErrorBadRequest(err)),
+        Err(_) => Err(error::ErrorBadRequest(web::Json(
+            r#"{"message":"ERROR_UPDATING_USER_ROLES"}"#,
+        ))),
     }
 }
 
